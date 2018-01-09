@@ -1,0 +1,108 @@
+# PNM(  portable anymap format ) AKA Netpbm format
+
+### Status:
+  - In progress
+    - Partially implemented P1, P2, P3, P4, P5, P6
+
+### Description
+ - PBM, PGM and PPM  reader and writer
+
+### Key features:
+- Headers only
+  - One file to include
+  - One file to handle
+  - No third parties
+  - No additional binaries
+  - Out of the box ready
+  - No need to recompile or start some install process.
+
+### Code sample 1 - data in vector:
+```c++
+ std::ifstream ifs( "image.pbm" );
+ std::vector<std::uint8_t > data;
+ PNM::Info info;
+
+ ifs >> PNM::load( data, info );
+ if( true == info.valid() )
+  {
+    std::cout << "width   = "  << info.width ()    << std::endl;
+    std::cout << "height  = "  << info.height()    << std::endl;
+    std::cout << "max     = "  << info.max()       << std::endl;
+    std::cout << "channel = "  << info.channel()   << std::endl;
+    std::cout << "type    = "  << (int)info.type() << std::endl;
+  }
+```
+
+### Code sample 2 - save vector:
+```c++
+ std::ofstream ofs("image.pbm");
+ std::vector<std::uint8_t > data;
+ data.resize( 100 * 13 );
+ //< In here fill data with something >
+
+ ofs << PNM::save( data, 100, 100, PNM::P1 );
+```
+
+### Code sample 3 - custom allocator:
+```c++
+ std::uint8_t *my_allocator( size_t const& size )
+  {
+   return (std::uint8_t *) malloc( size );
+  }
+
+ std::ifstream ifs( "image.pbm" );
+ std::uint8_t *data;
+ PNM::Info info;
+
+ ifs >> PNM::load( &data, my_allocator, info );
+ if( true == info.valid() )
+  {
+   std::cout << "width   = "  << info.width ()    << std::endl;
+   std::cout << "height  = "  << info.height()    << std::endl;
+   std::cout << "max     = "  << info.max()       << std::endl;
+   std::cout << "channel = "  << info.channel()   << std::endl;
+   std::cout << "type    = "  << (int)info.type() << std::endl;
+  }
+```
+
+### Code sample 4 - save pointer:
+```c++
+ std::ofstream ofs("image.pgm");
+ std::uint8_t data[ 100*100];
+ //< In here fill data with something >
+
+ ofs << PNM::save( data, 100, 100, PNM::P2 );
+```
+
+### Code sample 5 - probe:
+```c++
+ std::ifstream ifs( "image.pbm" );
+ PNM::Info info;
+
+ ifs >> PNM::probe( info );
+ if( true == info.valid() )
+  {
+   std::cout << "width   = "  << info.width ()    << std::endl;
+   std::cout << "height  = "  << info.height()    << std::endl;
+   std::cout << "max     = "  << info.max()       << std::endl;
+   std::cout << "channel = "  << info.channel()   << std::endl;
+   std::cout << "type    = "  << (int)info.type() << std::endl;
+  }
+```
+
+### Install:
+1. Clone this Repository: \
+  Examples:
+    - Windows : git clone https://github.com/dmilos/PNM.git c:\my-work-folder\my-git-folder\PNM
+    - Linux   : git clone https://github.com/dmilos/PNM.git /home/my-user-name/my-work-folder/my-git-folder/PNM
+2. Inform compiler where to find headers: \
+  Examples:
+   - MSVC : /Ic:\my-work-folder\my-git-folder\PNM\src
+   - gcc  : -I/home/my-user-name/my-work-folder/my-git-folder/PNM/src
+
+### Links
+  - [Wiki page](https://en.wikipedia.org/wiki/Netpbm_format)
+
+### Tested against:
+- gcc 6.4.0
+- MSVC 2015
