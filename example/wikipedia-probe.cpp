@@ -52,19 +52,22 @@ int main( int argc, char *argv[] )
  {
   std::cout << __FILE__ << std::endl;
 
-  std::cout << "Want error!" << std::endl;
+  std::cout << "Start: Want error!" << std::endl;
   check( "./data/corrupt-comment-eof.pbm" );
   check( "./data/corrupt-corrupt-data.pbm" );
   check( "./data/corrupt-corrupt-size.pbm" );
   check( "./data/corrupt-empty.pbm" );
   check( "./data/corrupt-magic-bad.pbm" );
   check( "./data/corrupt-magic-no.pbm" );
+  std::cout << "End: Want error!" << std::endl;
 
-  std::cout << "Must be OK!" << std::endl;
+
+  std::cout << "Start: Must be OK!" << std::endl;
   check( "./data/wikipedia.pbm" );
   check( "./data/wikipedia.pgm" );
   check( "./data/wikipedia.ppm" );
   check( "./data/wikipedia-onel-line.ppm" );
+  std::cout << "End: Must be OK!" << std::endl;
 
   return EXIT_SUCCESS;
  }

@@ -1,8 +1,8 @@
-# PNM(  portable anymap format ) AKA Netpbm format
+# PNM( Portable Anymap Format ) AKA Netpbm
 
 ### Status:
-  - In progress
-    - Partially implemented P1, P2, P3, P4, P5, P6
+  - Done and ready for use.
+    - Implemented: P1, P2, P3, P4, P5, P6
 
 ### Description
  - PBM, PGM and PPM  reader and writer
@@ -16,7 +16,7 @@
   - Out of the box ready
   - No need to recompile or start some install process.
 
-### Code sample 1 - data in vector:
+### Load image in to std::vector :
 ```c++
  std::ifstream ifs( "image.pbm" );
  std::vector<std::uint8_t > data;
@@ -30,10 +30,11 @@
     std::cout << "max     = "  << info.max()       << std::endl;
     std::cout << "channel = "  << info.channel()   << std::endl;
     std::cout << "type    = "  << (int)info.type() << std::endl;
+   // data contain valid information
   }
 ```
 
-### Code sample 2 - save vector:
+### Save image from std::vector:
 ```c++
  std::ofstream ofs("image.pbm");
  std::vector<std::uint8_t > data;
@@ -43,7 +44,7 @@
  ofs << PNM::save( data, 100, 100, PNM::P1 );
 ```
 
-### Code sample 3 - custom allocator:
+### Load data to raw memory by using custom allocator:
 ```c++
  std::uint8_t *my_allocator( size_t const& size )
   {
@@ -62,19 +63,20 @@
    std::cout << "max     = "  << info.max()       << std::endl;
    std::cout << "channel = "  << info.channel()   << std::endl;
    std::cout << "type    = "  << (int)info.type() << std::endl;
+   // data contain valid information allocated by my_allocator 
   }
 ```
 
-### Code sample 4 - save pointer:
+### Save data from raw memory:
 ```c++
- std::ofstream ofs("image.pgm");
+ std::ofstream ofs( "image.pgm" );
  std::uint8_t data[ 100*100];
  //< In here fill data with something >
 
  ofs << PNM::save( data, 100, 100, PNM::P2 );
 ```
 
-### Code sample 5 - probe:
+### Probe the file:
 ```c++
  std::ifstream ifs( "image.pbm" );
  PNM::Info info;
@@ -106,3 +108,4 @@
 ### Tested against:
 - gcc 6.4.0
 - MSVC 2015
+- MSVC 2017

@@ -31,14 +31,14 @@ namespace PNM
       size_type const& channel()const { return m_channel;}
       PNM::type const& type()   const { return m_type;   }
 
-   public:
-     size_type  & width()  { return m_width;  }
-     size_type  & height() { return m_height; }
-     size_type  & max()    { return m_max;    }
-     size_type  & channel(){ return m_channel;}
-     PNM::type  & type()   { return m_type;   }
+    public:
+      size_type  & width()  { return m_width;  }
+      size_type  & height() { return m_height; }
+      size_type  & max()    { return m_max;    }
+      size_type  & channel(){ return m_channel;}
+      PNM::type  & type()   { return m_type;   }
 
-   private:
+    private:
       size_type   m_width;
       size_type   m_height;
       size_type   m_max;
@@ -49,7 +49,7 @@ namespace PNM
   namespace _internal
    {
 
-    inline bool load_NL( std::istream& is )
+    inline bool load_NL( std::istream& is ) // Parse new line.
      {
       auto begin = is.tellg();
       auto ch = is.get();
@@ -87,7 +87,7 @@ namespace PNM
       return true;
      }
 
-    inline bool load_space( std::istream& is )
+    inline bool load_space( std::istream& is ) // tab or space. Not new line.
      {
       std::size_t counter=0;
       auto ch = is.get();
@@ -108,8 +108,21 @@ namespace PNM
        {
         again  = load_space( is );
         again |= load_NL( is );
+        counter += ( again ? 1 : 0 );
+       }
+      return 0 != counter;
+     }
+
+    inline bool load_junk( std::istream& is )
+     {
+      bool again = true;
+      size_t counter = 0;
+      while( true == again )
+       {
+        again  = load_space( is );
+        again |= load_NL( is );
         again |= load_comment( is );
-        counter += (again?1:0 );
+        counter += ( again ? 1 : 0 );
        }
       return 0 != counter;
      }
@@ -119,7 +132,8 @@ namespace PNM
       auto ch = is.get();
       if( 0 == std::isdigit( ch ) )
        {
-        is.unget(); return false;
+        is.unget();
+        return false;
        }
 
       number = 0;
@@ -131,7 +145,6 @@ namespace PNM
       is.unget();
       return true;
      }
-
 
     inline  PNM::type load_magic( std::istream& is )
      {
@@ -157,8 +170,11 @@ namespace PNM
            data[ position/8 ] = 0;
            for( std::size_t b=0; b < std::min<std::size_t>(width-x, 8 ); ++b )
             {
-             load_space( is );
-             if( false == load_number( is, number ) ){ is.seekg( begin );  return false; }
+             load_blank( is );
+             if( false == load_number( is, number ) )
+              {
+               is.seekg( begin );  return false; 
+              }
 
              if( number )
               {
@@ -175,7 +191,7 @@ namespace PNM
               {
                if( false == load_NL( is ) )
                 {
-                 if( ( (width-1) != y) && (( width-1 )!=( x*8+b ) )  )
+                 if( ( (height-1) != y) && (( width-1 )!=( x + b ) )  )
                   {
                    is.seekg( begin ); 
                    return false; 
@@ -188,7 +204,6 @@ namespace PNM
 
        return true;
       }
-
 
     template< typename data_type >
      inline  bool load_ascii_P2P3( std::istream& is, data_type * data, std::size_t const& width, std::size_t const& height, std::size_t const& channel  )
@@ -203,7 +218,7 @@ namespace PNM
            if( false == load_number( is, number ) ){ is.seekg( begin );  return false; }
            *data = data_type( number );
            ++data;
-           if( false == load_blank( is ) )
+           if( false == load_junk( is ) )
             {
              if( ( ( height-1 )!= y ) && ( (width-1) != x ) )
               {
@@ -298,16 +313,20 @@ namespace PNM
          {
           auto begin = is.tellg();
           this->m_type = PNM::_internal::load_magic( is ); if( PNM::error == this->m_type ) { is.seekg( begin ); return false; }
-          if( false == PNM::_internal::load_blank( is ) ){ is.seekg( begin ); return false; }
+          if( false == PNM::_internal::load_junk( is ) ){ is.seekg( begin ); return false; }
           if( false == load_number( is, m_width  ) ){ is.seekg( begin ); return false; }
-          if( false == PNM::_internal::load_blank( is ) ){ is.seekg( begin ); return false; }
+          if( false == PNM::_internal::load_junk( is ) ){ is.seekg( begin ); return false; }
           if( false == load_number( is, m_height ) ){ is.seekg( begin ); return false; }
-          if( false == PNM::_internal::load_blank( is ) ){ is.seekg( begin ); return false; }
+          if( false == PNM::_internal::load_junk( is ) ){ is.seekg( begin ); return false; }
 
           if( ( this->m_type == PNM::P2 ) || ( this->m_type == PNM::P3 ) || ( this->m_type == PNM::P5 ) || ( this->m_type == PNM::P6 ) )
            {
             if( false == load_number( is, m_max ) ){ is.seekg( begin ); return false; }
-            if( false == PNM::_internal::load_blank( is ) ){ is.seekg( begin ); return false; }
+           }
+
+          if( ( this->m_type == PNM::P2 ) || ( this->m_type == PNM::P3 ) || ( this->m_type == PNM::P6 ) )
+           {
+            if( false == PNM::_internal::load_junk( is ) ){ is.seekg( begin ); return false; }
            }
 
           if( ( PNM::P1 == this->m_type ) || ( PNM::P4 == this->m_type ) ){ m_channel = 1; }
@@ -577,6 +596,7 @@ namespace PNM
           vl.probe().m_type = PNM::error;
           return is;
          }
+
         return is;
        }
 
@@ -592,6 +612,7 @@ namespace PNM
           rl.probe().m_type = PNM::error;
           return is;
          }
+
         return is;
        }
      }
