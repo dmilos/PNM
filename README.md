@@ -67,6 +67,25 @@
   }
 ```
 
+### Load data from already alocated memory:
+```c++
+
+ std::ifstream ifs( "image.pbm" );
+ std::uint8_t *data = malloc( 100 * 100 * 3  );
+ PNM::Info info;
+
+ ifs >> PNM::load( data, info );
+ if( true == info.valid() )
+  {
+   std::cout << "width   = "  << info.width ()    << std::endl;
+   std::cout << "height  = "  << info.height()    << std::endl;
+   std::cout << "max     = "  << info.max()       << std::endl;
+   std::cout << "channel = "  << info.channel()   << std::endl;
+   std::cout << "type    = "  << (int)info.type() << std::endl;
+   // data contain valid information allocated by my_allocator 
+  }
+```
+
 ### Save data from raw memory:
 ```c++
  std::ofstream ofs( "image.pgm" );

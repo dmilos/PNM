@@ -29,6 +29,7 @@ namespace PNM
       size_type const& height() const { return m_height; }
       size_type const& max()    const { return m_max;    }
       size_type const& channel()const { return m_channel;}
+      size_type const& depth()  const { return m_depth;  } //!< Depth of channel in bits
       PNM::type const& type()   const { return m_type;   }
 
     public:
@@ -36,6 +37,7 @@ namespace PNM
       size_type  & height() { return m_height; }
       size_type  & max()    { return m_max;    }
       size_type  & channel(){ return m_channel;}
+      size_type  & depth()  { return m_depth;  }
       PNM::type  & type()   { return m_type;   }
 
     private:
@@ -43,6 +45,7 @@ namespace PNM
       size_type   m_height;
       size_type   m_max;
       size_type   m_channel;
+      size_type   m_depth;
       PNM::type   m_type;
    };
 
