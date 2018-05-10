@@ -74,13 +74,16 @@ namespace PNM
 
     inline bool load_comment( std::istream& is )
      {
-      auto begin = is.tellg();
       auto ch = is.get();
-      if( '#' != ch ){ is.seekg( begin ); return false; }
+      if( '#' != ch )
+       {
+        is.unget();
+        return false; 
+       }
 
       do
        {
-        if( true == load_NL( is ) )
+        if( true == PNM::_internal::load_NL( is ) )
          {
           return true;
          }
@@ -92,42 +95,17 @@ namespace PNM
 
     inline bool load_space( std::istream& is ) // tab or space. Not new line.
      {
-      std::size_t counter=0;
+      std::size_t consumed = 0;
       auto ch = is.get();
+      ++consumed;
       while( ( ch == ' ' ) || ( ch == '\t' ) )
        {
         ch = is.get();
-        ++counter;
+        ++consumed;
        }
       is.unget();
-      return 0 != counter;
-     }
-
-    inline bool load_blank( std::istream& is )
-     {
-      bool again = true;
-      size_t counter = 0;
-      while( true == again )
-       {
-        again  = load_space( is );
-        again |= load_NL( is );
-        counter += ( again ? 1 : 0 );
-       }
-      return 0 != counter;
-     }
-
-    inline bool load_junk( std::istream& is )
-     {
-      bool again = true;
-      size_t counter = 0;
-      while( true == again )
-       {
-        again  = load_space( is );
-        again |= load_NL( is );
-        again |= load_comment( is );
-        counter += ( again ? 1 : 0 );
-       }
-      return 0 != counter;
+       --consumed;
+      return 0 != consumed;
      }
 
     inline bool load_number( std::istream& is, std::size_t & number )
@@ -147,6 +125,33 @@ namespace PNM
        }while( 0 != std::isdigit( ch ) );
       is.unget();
       return true;
+     }
+
+    inline bool load_blank( std::istream& is )
+     {
+      bool again = true;
+      size_t counter = 0;
+      while( true == again )
+       {
+        again  = PNM::_internal::load_space( is );
+        again |= PNM::_internal::load_NL( is );
+        counter += ( again ? 1 : 0 );
+       }
+      return 0 != counter;
+     }
+
+    inline bool load_junk( std::istream& is )
+     {
+      bool again = true;
+      size_t counter = 0;
+      while( true == again )
+       {
+        again  = PNM::_internal::load_space( is );
+        again |= PNM::_internal::load_NL( is );
+        again |= PNM::_internal::load_comment( is );
+        counter += ( again ? 1 : 0 );
+       }
+      return 0 != counter;
      }
 
     inline  PNM::type load_magic( std::istream& is )
@@ -173,8 +178,8 @@ namespace PNM
            data[ position/8 ] = 0;
            for( std::size_t b=0; b < std::min<std::size_t>(width-x, 8 ); ++b )
             {
-             load_blank( is );
-             if( false == load_number( is, number ) )
+             PNM::_internal::load_blank( is );
+             if( false == PNM::_internal::load_number( is, number ) )
               {
                is.seekg( begin );  return false; 
               }
@@ -190,9 +195,9 @@ namespace PNM
 
              ++position;
 
-             if( false == load_space( is ) )
+             if( false == PNM::_internal::load_space( is ) )
               {
-               if( false == load_NL( is ) )
+               if( false == PNM::_internal::load_NL( is ) )
                 {
                  if( ( (height-1) != y) && (( width-1 )!=( x + b ) )  )
                   {
@@ -217,11 +222,11 @@ namespace PNM
         {
          for( std::size_t x=0; x < width*channel; ++x )
           {
-           load_space( is );
-           if( false == load_number( is, number ) ){ is.seekg( begin );  return false; }
+           PNM::_internal::load_space( is );
+           if( false == PNM::_internal::load_number( is, number ) ){ is.seekg( begin );  return false; }
            *data = data_type( number );
            ++data;
-           if( false == load_junk( is ) )
+           if( false == PNM::_internal::load_junk( is ) )
             {
              if( ( ( height-1 )!= y ) && ( (width-1) != x ) )
               {
@@ -237,7 +242,7 @@ namespace PNM
 
     inline bool load_raw_P4( std::istream& is, std::uint8_t * data, std::size_t const& width, std::size_t const& height )
       {
-       is.read( (char*)data, height * ( width / 8 + ( ( width  % 8 )?1:0 ) ) );
+       is.read( (char*)data, ( width / 8 + ( ( width  % 8 ) ? 1 : 0 ) ) * height );
        if( is ) return true;
        return false;
       }
@@ -245,6 +250,11 @@ namespace PNM
     inline bool load_raw_P5P6( std::istream& is, std::uint8_t * data, std::size_t const& width, std::size_t const& height, std::size_t const& channel )
       {
        is.read( (char*)data, width * height * channel );
+       auto gc = is.gcount();
+       if( (width * height * channel) != gc )
+        {
+         return false;
+        }
        if( is ) return true;
        return false;
       }
@@ -314,27 +324,77 @@ namespace PNM
 
         bool process( std::istream& is )
          {
-          auto begin = is.tellg();
-          this->m_type = PNM::_internal::load_magic( is ); if( PNM::error == this->m_type ) { is.seekg( begin ); return false; }
-          if( false == PNM::_internal::load_junk( is ) ){ is.seekg( begin ); return false; }
-          if( false == load_number( is, m_width  ) ){ is.seekg( begin ); return false; }
-          if( false == PNM::_internal::load_junk( is ) ){ is.seekg( begin ); return false; }
-          if( false == load_number( is, m_height ) ){ is.seekg( begin ); return false; }
-          if( false == PNM::_internal::load_junk( is ) ){ is.seekg( begin ); return false; }
+          std::size_t total = 0;
 
-          if( ( this->m_type == PNM::P2 ) || ( this->m_type == PNM::P3 ) || ( this->m_type == PNM::P5 ) || ( this->m_type == PNM::P6 ) )
            {
-            if( false == load_number( is, m_max ) ){ is.seekg( begin ); return false; }
+           is.seekg( 0, ios_base::end );
+           total = std::size_t( is.tellg( ) );
+           is.seekg (0, ios_base::beg );
            }
 
-          if( ( this->m_type == PNM::P2 ) || ( this->m_type == PNM::P3 ) || ( this->m_type == PNM::P6 ) )
+          this->m_type = PNM::_internal::load_magic( is ); if( PNM::error == this->m_type ) { is.seekg( 0, ios_base::beg ); return false; }
+
+          switch( this->m_type )
            {
-            if( false == PNM::_internal::load_junk( is ) ){ is.seekg( begin ); return false; }
+            case( PNM::P1 ): m_channel = 1; break;
+            case( PNM::P2 ): m_channel = 1; break;
+            case( PNM::P3 ): m_channel = 3; break;
+            case( PNM::P4 ): m_channel = 1; break;
+            case( PNM::P5 ): m_channel = 1; break;
+            case( PNM::P6 ): m_channel = 3; break;
+            default: return false;
            }
 
-          if( ( PNM::P1 == this->m_type ) || ( PNM::P4 == this->m_type ) ){ m_channel = 1; }
-          if( ( PNM::P2 == this->m_type ) || ( PNM::P5 == this->m_type ) ){ m_channel = 1; }
-          if( ( PNM::P3 == this->m_type ) || ( PNM::P6 == this->m_type ) ){ m_channel = 3; }
+          if( false == PNM::_internal::load_junk(   is )           ){ is.seekg( 0, ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_number( is, m_width  ) ){ is.seekg( 0, ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_junk(   is )           ){ is.seekg( 0, ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_number( is, m_height ) ){ is.seekg( 0, ios_base::beg ); return false; }
+
+          std::size_t size = -1;
+          switch( this->m_type )
+           {
+            case( PNM::P4 ):
+             {
+              size = ( m_width / 8 + ( ( m_width  % 8 ) ? 1:0 ) ) * m_height;
+             }break;
+            case( PNM::P5 ): 
+            case( PNM::P6 ):
+             {
+              size = m_width * m_height * m_channel;
+             }break;
+            default: break;
+           }
+
+          switch( this->m_type )
+           {
+            case( PNM::P2 ):
+            case( PNM::P3 ):
+            case( PNM::P5 ):
+            case( PNM::P6 ):
+             {
+              if( false == PNM::_internal::load_junk(   is )        ){ is.seekg( 0, ios_base::beg ); return false; }
+              if( false == PNM::_internal::load_number( is, m_max ) ){ is.seekg( 0, ios_base::beg ); return false; }
+             }
+            default: break;
+           }
+
+          switch( this->m_type )
+           {
+            case( PNM::P1 ): case( PNM::P2 ): case( PNM::P3 ):
+             {
+              if( false == PNM::_internal::load_junk(   is )        ){ is.seekg( 0, ios_base::beg ); return false; }
+             }
+            default: break;
+           }
+
+          switch( this->m_type )
+           {
+            case( PNM::P4 ): case( PNM::P5 ): case( PNM::P6 ):
+             {
+              is.seekg( total - size, ios_base::beg );
+             }
+            default: break;
+           }
 
           return true;
          }
@@ -376,12 +436,12 @@ namespace PNM
 
          switch( m_probe.type() )
           {
-           case( PNM::P1 ): return load_ascii_P1( is, m_data.data(), m_probe.width(), m_probe.height() );
-           case( PNM::P2 ): return load_ascii_P2P3( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
-           case( PNM::P3 ): return load_ascii_P2P3( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
-           case( PNM::P4 ): return load_raw_P4(   is, m_data.data(), m_probe.width(), m_probe.height() );
-           case( PNM::P5 ): return load_raw_P5P6( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
-           case( PNM::P6 ): return load_raw_P5P6( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P1 ): return PNM::_internal::load_ascii_P1( is, m_data.data(), m_probe.width(), m_probe.height() );
+           case( PNM::P2 ): return PNM::_internal::load_ascii_P2P3( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P3 ): return PNM::_internal::load_ascii_P2P3( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P4 ): return PNM::_internal::load_raw_P4(   is, m_data.data(), m_probe.width(), m_probe.height() );
+           case( PNM::P5 ): return PNM::_internal::load_raw_P5P6( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P6 ): return PNM::_internal::load_raw_P5P6( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
           }
 
          return false;
@@ -453,12 +513,12 @@ namespace PNM
          switch( m_probe.type() )
           {
            default:
-           case( PNM::P1 ): return load_ascii_P1(   is, data, m_probe.width(), m_probe.height() );
-           case( PNM::P2 ): return load_ascii_P2P3( is, data, m_probe.width(), m_probe.height(), m_probe.channel() );
-           case( PNM::P3 ): return load_ascii_P2P3( is, data, m_probe.width(), m_probe.height(), m_probe.channel() );
-           case( PNM::P4 ): return load_raw_P4(     is, data, m_probe.width(), m_probe.height() );
-           case( PNM::P5 ): return load_raw_P5P6(   is, data, m_probe.width(), m_probe.height(), m_probe.channel() );
-           case( PNM::P6 ): return load_raw_P5P6(   is, data, m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P1 ): return PNM::_internal::load_ascii_P1(   is, data, m_probe.width(), m_probe.height() );
+           case( PNM::P2 ): return PNM::_internal::load_ascii_P2P3( is, data, m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P3 ): return PNM::_internal::load_ascii_P2P3( is, data, m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P4 ): return PNM::_internal::load_raw_P4(     is, data, m_probe.width(), m_probe.height() );
+           case( PNM::P5 ): return PNM::_internal::load_raw_P5P6(   is, data, m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P6 ): return PNM::_internal::load_raw_P5P6(   is, data, m_probe.width(), m_probe.height(), m_probe.channel() );
           }
 
          return false;
@@ -492,13 +552,20 @@ namespace PNM
 
        bool process( std::ostream& os )
         {
-         os << "P" << char( int(m_type) + '0' ) << '\x0A' /*os.widen('\n')*/;
-         os <<  m_width << " " << m_height << '\x0A' /*os.widen('\n')*/;
+         static std::uint8_t separator = ' '; /*os.widen('\n')*/
+         static std::uint8_t terminator = '\x0A'; /*os.widen('\n')*/
+
+         os << "P" << char( int(m_type) + '0' ) << separator;
+         os << m_width  << separator;
+         os << m_height;
 
          if( ( PNM::P2 == m_type ) || ( PNM::P3 == m_type ) || ( PNM::P5 == m_type ) || ( PNM::P6 == m_type ) )
           {
-           os << m_max << '\x0A' /*os.widen('\n')*/;
+           os << separator;
+           os << m_max;
           }
+
+         os << terminator;
 
          m_channel = 1;
          if( ( PNM::P3 == m_type  ) || ( PNM::P6 == m_type ) )
@@ -506,14 +573,13 @@ namespace PNM
            m_channel = 3;
           }
 
-         if( PNM::P1 == m_type )  { return save_ascii_P1( os, m_data, m_width, m_height ); }
-         if( PNM::P4 == m_type )  { return save_bin_P4( os, m_data, m_width, m_height ); }
-         if( ( PNM::P2 == m_type ) || ( PNM::P3 == m_type ) ) return save_ascii_P2P3( os, m_data, m_width, m_height, m_channel );
-         if( ( PNM::P5 == m_type ) || ( PNM::P6 == m_type ) ) return save_bin_P5P6( os, m_data, m_width, m_height, m_channel );
+         if( PNM::P1 == m_type )  { return PNM::_internal::save_ascii_P1( os, m_data, m_width, m_height ); }
+         if( PNM::P4 == m_type )  { return PNM::_internal::save_bin_P4( os, m_data, m_width, m_height ); }
+         if( ( PNM::P2 == m_type ) || ( PNM::P3 == m_type ) ) return PNM::_internal::save_ascii_P2P3( os, m_data, m_width, m_height, m_channel );
+         if( ( PNM::P5 == m_type ) || ( PNM::P6 == m_type ) ) return PNM::_internal::save_bin_P5P6( os, m_data, m_width, m_height, m_channel );
 
          return false;
         }
-
 
        private:
          std::uint8_t const* m_data;
