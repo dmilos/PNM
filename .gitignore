@@ -22,3 +22,4 @@ doc/doxygen/html
 /example/msvc/pnm.VC.db
 /example/msvc/pnm.VC.VC.opendb
 /example/out
+/example/msvc/*.db

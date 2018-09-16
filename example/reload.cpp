@@ -1,11 +1,13 @@
+#include "../src/pnm/pnm.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <string>
 
+
 using namespace std;
 
-#include "../src/pnm/pnm.hpp"
 
 #ifdef _MSC_VER
 #define DATA_FOLDER "../data"
@@ -58,8 +60,8 @@ int main(int argc, char *argv[])
     }
 
     {
-     std::ofstream ofs( output , ios::binary);
-     ofs << PNM::save(data, info);
+     std::ofstream ofs( output , ios::binary );
+     ofs << PNM::save( data, info );
     }
 
     return EXIT_SUCCESS;

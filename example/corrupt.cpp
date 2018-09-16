@@ -3,9 +3,10 @@
 #include <iomanip>
 #include <string>
 
+#include "../src/pnm/pnm.hpp"
+
 using namespace std;
 
-#include "../src/pnm/pnm.hpp"
 
 void check( std::string const& filename )
  {

@@ -38,7 +38,7 @@
 ```c++
  std::ofstream ofs("image.pbm");
  std::vector<std::uint8_t > data;
- data.resize( 100 * 13 );
+
  //< In here fill data with something >
 
  ofs << PNM::save( data, 100, 100, PNM::P1 );

@@ -3,9 +3,10 @@
 #include <iomanip>
 #include <string>
 
+#include "../src/pnm/pnm.hpp"
+
 using namespace std;
 
-#include "../src/pnm/pnm.hpp"
 
 #ifdef _MSC_VER
 #define DATA_FOLDER "../data"

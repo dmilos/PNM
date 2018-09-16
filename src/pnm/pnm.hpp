@@ -1,10 +1,12 @@
-#ifndef  Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13
+#ifndef Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13
 #define Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13
 
 #include <cctype>
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <istream>
+#include <ostream>
 
 namespace PNM
  {
@@ -88,7 +90,7 @@ namespace PNM
           return true;
          }
         ch = is.get();
-       }while( ( std::char_traits<char>::eof() != ch  ) && ( false == is.eof() )  );
+       }while( ( std::char_traits<char>::eof() != ch ) && ( false == is.eof() ) );
 
       return true;
      }
@@ -326,13 +328,13 @@ namespace PNM
          {
           std::size_t total = 0;
 
-           {
-           is.seekg( 0, ios_base::end );
+          {
+           is.seekg( 0, std::ios_base::end );
            total = std::size_t( is.tellg( ) );
-           is.seekg (0, ios_base::beg );
-           }
+           is.seekg (0, std::ios_base::beg );
+          }
 
-          this->m_type = PNM::_internal::load_magic( is ); if( PNM::error == this->m_type ) { is.seekg( 0, ios_base::beg ); return false; }
+          this->m_type = PNM::_internal::load_magic( is ); if( PNM::error == this->m_type ) { is.seekg( 0, std::ios_base::beg ); return false; }
 
           switch( this->m_type )
            {
@@ -345,10 +347,10 @@ namespace PNM
             default: return false;
            }
 
-          if( false == PNM::_internal::load_junk(   is )           ){ is.seekg( 0, ios_base::beg ); return false; }
-          if( false == PNM::_internal::load_number( is, m_width  ) ){ is.seekg( 0, ios_base::beg ); return false; }
-          if( false == PNM::_internal::load_junk(   is )           ){ is.seekg( 0, ios_base::beg ); return false; }
-          if( false == PNM::_internal::load_number( is, m_height ) ){ is.seekg( 0, ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_junk(   is )           ){ is.seekg( 0, std::ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_number( is, m_width  ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_junk(   is )           ){ is.seekg( 0, std::ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_number( is, m_height ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
 
           std::size_t size = -1;
           switch( this->m_type )
@@ -372,8 +374,8 @@ namespace PNM
             case( PNM::P5 ):
             case( PNM::P6 ):
              {
-              if( false == PNM::_internal::load_junk(   is )        ){ is.seekg( 0, ios_base::beg ); return false; }
-              if( false == PNM::_internal::load_number( is, m_max ) ){ is.seekg( 0, ios_base::beg ); return false; }
+              if( false == PNM::_internal::load_junk(   is )        ){ is.seekg( 0, std::ios_base::beg ); return false; }
+              if( false == PNM::_internal::load_number( is, m_max ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
              }
             default: break;
            }
@@ -382,7 +384,7 @@ namespace PNM
            {
             case( PNM::P1 ): case( PNM::P2 ): case( PNM::P3 ):
              {
-              if( false == PNM::_internal::load_junk(   is )        ){ is.seekg( 0, ios_base::beg ); return false; }
+              if( false == PNM::_internal::load_junk(   is )        ){ is.seekg( 0, std::ios_base::beg ); return false; }
              }
             default: break;
            }
@@ -391,7 +393,7 @@ namespace PNM
            {
             case( PNM::P4 ): case( PNM::P5 ): case( PNM::P6 ):
              {
-              is.seekg( total - size, ios_base::beg );
+              is.seekg( total - size, std::ios_base::beg );
              }
             default: break;
            }
