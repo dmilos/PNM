@@ -7,6 +7,7 @@
 #include <string>
 #include <istream>
 #include <ostream>
+#include <iomanip>
 
 namespace PNM
  {
