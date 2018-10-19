@@ -81,7 +81,7 @@ namespace PNM
       if( '#' != ch )
        {
         is.unget();
-        return false; 
+        return false;
        }
 
       do
@@ -184,7 +184,7 @@ namespace PNM
              PNM::_internal::load_blank( is );
              if( false == PNM::_internal::load_number( is, number ) )
               {
-               is.seekg( begin );  return false; 
+               is.seekg( begin );  return false;
               }
 
              if( number )
@@ -204,8 +204,8 @@ namespace PNM
                 {
                  if( ( (height-1) != y) && (( width-1 )!=( x + b ) )  )
                   {
-                   is.seekg( begin ); 
-                   return false; 
+                   is.seekg( begin );
+                   return false;
                   }
                 }
               }
@@ -233,12 +233,12 @@ namespace PNM
             {
              if( ( ( height-1 )!= y ) && ( (width-1) != x ) )
               {
-               is.seekg( begin ); 
-               return false; 
+               is.seekg( begin );
+               return false;
               }
             }
           }
-       }
+        }
 
        return true;
       }
@@ -360,7 +360,7 @@ namespace PNM
              {
               size = ( m_width / 8 + ( ( m_width  % 8 ) ? 1:0 ) ) * m_height;
              }break;
-            case( PNM::P5 ): 
+            case( PNM::P5 ):
             case( PNM::P6 ):
              {
               size = m_width * m_height * m_channel;
@@ -439,12 +439,12 @@ namespace PNM
 
          switch( m_probe.type() )
           {
-           case( PNM::P1 ): return PNM::_internal::load_ascii_P1( is, m_data.data(), m_probe.width(), m_probe.height() );
+           case( PNM::P1 ): return PNM::_internal::load_ascii_P1(   is, m_data.data(), m_probe.width(), m_probe.height() );
            case( PNM::P2 ): return PNM::_internal::load_ascii_P2P3( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
            case( PNM::P3 ): return PNM::_internal::load_ascii_P2P3( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
-           case( PNM::P4 ): return PNM::_internal::load_raw_P4(   is, m_data.data(), m_probe.width(), m_probe.height() );
-           case( PNM::P5 ): return PNM::_internal::load_raw_P5P6( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
-           case( PNM::P6 ): return PNM::_internal::load_raw_P5P6( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P4 ): return PNM::_internal::load_raw_P4(     is, m_data.data(), m_probe.width(), m_probe.height() );
+           case( PNM::P5 ): return PNM::_internal::load_raw_P5P6(   is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
+           case( PNM::P6 ): return PNM::_internal::load_raw_P5P6(   is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
           }
 
          return false;
@@ -461,7 +461,8 @@ namespace PNM
 
     class RawLoad
      {
-      typedef std::uint8_t* (*allocator_type)( size_t const& size );
+      public:
+        typedef std::uint8_t* (*allocator_type)( size_t const& size );
       public:
 
         RawLoad( std::uint8_t * data, PNM::Info &info )
@@ -472,7 +473,7 @@ namespace PNM
         {
         }
 
-        RawLoad( std::uint8_t ** data, allocator_type &allocator, PNM::Info &info )
+        RawLoad( std::uint8_t ** data, allocator_type const&allocator, PNM::Info &info )
          :m_probe( info )
          ,m_dataP( data )
          ,m_dataX( nullptr )
@@ -482,8 +483,9 @@ namespace PNM
 
         RawLoad( RawLoad const& that )
          :m_probe( that.m_probe )
-         , m_dataP( that.m_dataP )
-         , m_allocator( that.m_allocator )
+         ,m_dataP( that.m_dataP )
+         ,m_dataX( that.m_dataX )
+         ,m_allocator( that.m_allocator )
          {
          }
 
@@ -497,7 +499,7 @@ namespace PNM
          if( PNM::error == m_probe.type() ){ return false; }
          std::uint8_t *data = nullptr;
 
-         if( nullptr != m_allocator ) 
+         if( nullptr != m_allocator )
           {
            if( ( PNM::P1 == m_probe.type() ) || ( PNM::P4 == m_probe.type() ) )
             {
@@ -606,7 +608,7 @@ namespace PNM
     return PNM::_internal::RawLoad( data, info );
    }
 
-  inline PNM::_internal::RawLoad load( std::uint8_t ** data, std::uint8_t* (*allocator)( size_t const& size ), PNM::Info &info )
+  inline PNM::_internal::RawLoad load( std::uint8_t ** data, PNM::_internal::RawLoad::allocator_type  const& allocator, PNM::Info &info )
    {
     return PNM::_internal::RawLoad( data, allocator, info );
    }

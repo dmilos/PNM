@@ -63,7 +63,7 @@
    std::cout << "max     = "  << info.max()       << std::endl;
    std::cout << "channel = "  << info.channel()   << std::endl;
    std::cout << "type    = "  << (int)info.type() << std::endl;
-   // data contain valid information allocated by my_allocator 
+   // data contain valid information allocated by my_allocator
   }
 ```
 
@@ -82,7 +82,7 @@
    std::cout << "max     = "  << info.max()       << std::endl;
    std::cout << "channel = "  << info.channel()   << std::endl;
    std::cout << "type    = "  << (int)info.type() << std::endl;
-   // data contain valid information allocated by my_allocator 
+   // data contain valid information allocated by my_allocator
   }
 ```
 

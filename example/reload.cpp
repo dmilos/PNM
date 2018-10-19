@@ -36,7 +36,47 @@ void print(PNM::Info const& info)
     }
 }
 
-int main(int argc, char *argv[])
+
+std::uint8_t *my_allocator( size_t const& size )
+{
+  return (std::uint8_t *) malloc( size );
+}
+int main_allocator(int argc, char *argv[])
+{
+  std::uint8_t *data;
+  PNM::Info info;
+
+  std::string  input;
+
+
+  std::string output;
+
+  if( 3 != argc )
+  {
+    std::cout << "Invalid number of parameters" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  input  = argv[1];
+  output = argv[2];
+
+  {
+    std::ifstream ifs( input, ios::binary );
+    ifs >> PNM::load( &data, my_allocator, info );
+    print(info);
+  }
+
+  {
+    std::ofstream ofs( output , ios::binary );
+    ofs << PNM::save( data, info );
+  }
+
+  free( data );
+  return EXIT_SUCCESS;
+}
+
+
+int main_vector(int argc, char *argv[])
 {
     std::vector<std::uint8_t> data;
     PNM::Info info;
@@ -54,7 +94,7 @@ int main(int argc, char *argv[])
     output = argv[2];
 
     {
-     std::ifstream ifs(input, ios::binary);
+     std::ifstream ifs( input, ios::binary );
      ifs >> PNM::load( data, info );
      print(info);
     }
@@ -67,3 +107,27 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
+
+
+
+int main(int argc, char *argv[])
+{
+ char *arg_value[3];
+ arg_value[0] = argv[0];
+ arg_value[1] = argv[1];
+ arg_value[2] = argv[2];
+
+  { 
+   std::string o = "A"; o += argv[2];
+   arg_value[2] = const_cast<char*>( o.c_str() );
+   main_allocator( argc, argv );   
+  }
+
+  { 
+   std::string o = "V"; o += argv[2];
+   arg_value[2] = const_cast<char*>( o.c_str() );
+   main_vector( argc, argv );   
+  }
+
+  return EXIT_SUCCESS;
+}
