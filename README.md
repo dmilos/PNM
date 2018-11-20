@@ -15,6 +15,10 @@
   - No additional binaries
   - Out of the box ready
   - No need to recompile or start some install process.
+  - API Statistics.
+    - Number of namespaces: 1( one )
+    - Number of functions :3 ( three )
+    - Number of Classes/Structures: 1 ( one )
 
 ### Load image in to std::vector :
 ```c++
@@ -36,12 +40,15 @@
 
 ### Save image from std::vector:
 ```c++
- std::ofstream ofs("image.pbm");
+ std::ofstream ofs("image1.pbm");
  std::vector<std::uint8_t > data;
 
  //< In here fill data with something >
 
  ofs << PNM::save( data, 100, 100, PNM::P1 );
+ 
+ // One-liner version
+ { std::ofstream("image2.pbm") << PNM::save( data, 100, 100, PNM::P1 ); }
 ```
 
 ### Load data to raw memory by using custom allocator:
@@ -88,11 +95,14 @@
 
 ### Save data from raw memory:
 ```c++
- std::ofstream ofs( "image.pgm" );
+ std::ofstream ofs( "image1.pgm" );
  std::uint8_t data[ 100*100];
  //< In here fill data with something >
 
  ofs << PNM::save( data, 100, 100, PNM::P2 );
+ 
+ // One-liner version
+ { std::ofstream( "image2.pgm" )<< PNM::save( data, 100, 100, PNM::P2 ) }
 ```
 
 ### Probe the file:

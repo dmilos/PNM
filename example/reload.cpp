@@ -6,7 +6,7 @@
 #include <string>
 
 
-using namespace std;
+using namespace std ;
 
 
 #ifdef _MSC_VER
@@ -61,14 +61,13 @@ int main_allocator(int argc, char *argv[])
   output = argv[2];
 
   {
-    std::ifstream ifs( input, ios::binary );
-    ifs >> PNM::load( &data, my_allocator, info );
+    //std::ifstream ifs( input, ios::binary );
+    std::ifstream( input, ios::binary ) >> PNM::load( &data, my_allocator, info );
     print(info);
   }
 
   {
-    std::ofstream ofs( output , ios::binary );
-    ofs << PNM::save( data, info );
+    std::ofstream( output , ios::binary ) << PNM::save( data, info );
   }
 
   free( data );
@@ -100,15 +99,11 @@ int main_vector(int argc, char *argv[])
     }
 
     {
-     std::ofstream ofs( output , ios::binary );
-     ofs << PNM::save( data, info );
+     std::ofstream ( output , ios::binary ) << PNM::save( data, info );
     }
 
     return EXIT_SUCCESS;
 }
-
-
-
 
 int main(int argc, char *argv[])
 {
@@ -117,16 +112,16 @@ int main(int argc, char *argv[])
  arg_value[1] = argv[1];
  arg_value[2] = argv[2];
 
-  { 
+  {
    std::string o = "A"; o += argv[2];
    arg_value[2] = const_cast<char*>( o.c_str() );
-   main_allocator( argc, argv );   
+   main_allocator( argc, argv );
   }
 
-  { 
+  {
    std::string o = "V"; o += argv[2];
    arg_value[2] = const_cast<char*>( o.c_str() );
-   main_vector( argc, argv );   
+   main_vector( argc, argv );
   }
 
   return EXIT_SUCCESS;

@@ -643,13 +643,19 @@ namespace PNM
     namespace operators
      {
 
-      inline std::ostream& operator<<( std::ostream& os, PNM::_internal::RawSave && rs )
+      inline std::ostream& operator<<( std::ostream&  os, PNM::_internal::RawSave    && rs )
        {
         rs.process( os );
         return os;
        }
 
-      inline std::istream& operator>>( std::istream& is, PNM::_internal::Probe && probe )
+      inline std::ostream& operator<<( std::ostream&& os, PNM::_internal::RawSave    && rs )
+       {
+        rs.process( os );
+        return os;
+       }
+
+      inline std::istream& operator>>( std::istream&  is, PNM::_internal::Probe      && probe )
        {
         if( false == probe.process( is ) )
          {
@@ -658,7 +664,16 @@ namespace PNM
         return is;
        }
 
-      inline std::istream& operator>>( std::istream& is, PNM::_internal::VectorLoad && vl )
+      inline std::istream& operator>>( std::istream&& is, PNM::_internal::Probe      && probe )
+       {
+        if( false == probe.process( is ) )
+         {
+          probe.m_type = PNM::error;
+         }
+        return is;
+       }
+
+      inline std::istream& operator>>( std::istream&  is, PNM::_internal::VectorLoad && vl )
        {
         if( false == vl.probe().process( is ) )
          {
@@ -674,7 +689,23 @@ namespace PNM
         return is;
        }
 
-      inline std::istream& operator>>( std::istream& is, PNM::_internal::RawLoad && rl )
+      inline std::istream& operator>>( std::istream&& is, PNM::_internal::VectorLoad && vl )
+       {
+        if( false == vl.probe().process( is ) )
+         {
+          return is;
+         }
+
+        if( false == vl.process( is ) )
+         {
+          vl.probe().m_type = PNM::error;
+          return is;
+         }
+
+        return is;
+       }
+
+      inline std::istream& operator>>( std::istream&  is, PNM::_internal::RawLoad    && rl )
        {
         if( false == rl.probe().process( is ) )
          {
@@ -689,6 +720,23 @@ namespace PNM
 
         return is;
        }
+
+      inline std::istream& operator>>( std::istream&& is, PNM::_internal::RawLoad    && rl )
+       {
+        if( false == rl.probe().process( is ) )
+         {
+          return is;
+         }
+
+        if( false == rl.process( is ) )
+         {
+          rl.probe().m_type = PNM::error;
+          return is;
+         }
+
+        return is;
+       }
+
      }
    }
 
