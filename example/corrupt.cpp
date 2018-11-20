@@ -11,7 +11,7 @@ using namespace std;
 void check( std::string const& filename )
  {
 
-  std::ifstream ifs( filename.c_str() );
+  std::ifstream ifs( filename.c_str(), std::ios_base::binary );
   std::vector<std::uint8_t > data;
   PNM::Info info;
 

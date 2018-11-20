@@ -21,7 +21,7 @@ using namespace std;
 
 int main( int argc, char *argv[] )
  {
- std::ifstream ifs( DATA_FOLDER "wikipedia.pbm" );
+ std::ifstream ifs( DATA_FOLDER "wikipedia.pbm", std::ios_base::binary );
  std::vector<std::uint8_t > data;
  PNM::Info info;
 

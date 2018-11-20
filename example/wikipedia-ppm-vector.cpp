@@ -39,7 +39,7 @@ int main( int argc, char *argv[] )
  {
   std::cout << __FILE__ << std::endl;
 
-  std::ifstream ifs( DATA_FOLDER "/wikipedia.ppm" );
+  std::ifstream ifs( DATA_FOLDER "/wikipedia.ppm", std::ios_base::binary );
   std::vector<std::uint8_t > data;
   PNM::Info info;
 

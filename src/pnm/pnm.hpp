@@ -418,7 +418,7 @@ namespace PNM
     class VectorLoad
      {
       public:
-        VectorLoad( std::vector<std::uint8_t > & data, PNM::Info &info )
+        VectorLoad( std::vector<std::uint8_t> & data, PNM::Info &info )
          :m_probe( info )
          ,m_data( data )
          {
@@ -456,7 +456,7 @@ namespace PNM
         PNM::_internal::Probe m_probe;
 
       private:
-        std::vector<std::uint8_t > & m_data;
+        std::vector<std::uint8_t> & m_data;
      };
 
     class RawLoad
@@ -598,7 +598,7 @@ namespace PNM
    }
 
 
-  inline PNM::_internal::VectorLoad load( std::vector<std::uint8_t > & data, PNM::Info &info )
+  inline PNM::_internal::VectorLoad load( std::vector<std::uint8_t> & data, PNM::Info &info )
    {
     return PNM::_internal::VectorLoad( data, info );
    }
@@ -618,7 +618,7 @@ namespace PNM
     return PNM::_internal::RawSave( data, info.height(), info.width(), info.type(), info.max() );
    }
 
-  inline PNM::_internal::RawSave save(  std::vector<std::uint8_t > const& data, PNM::Info const& info )
+  inline PNM::_internal::RawSave save(  std::vector<std::uint8_t> const& data, PNM::Info const& info )
    {
     return PNM::_internal::RawSave( data.data(), info.width(), info.height(), info.type(), info.max() );
    }
@@ -628,7 +628,7 @@ namespace PNM
     return PNM::_internal::RawSave( data, width, height, type, max );
    }
 
-  inline PNM::_internal::RawSave save( std::vector<std::uint8_t > const& data, std::size_t const& height, std::size_t const& width, PNM::type const&type, std::size_t const&max = 255 )
+  inline PNM::_internal::RawSave save( std::vector<std::uint8_t> const& data, std::size_t const& height, std::size_t const& width, PNM::type const&type, std::size_t const&max = 255 )
    {
     return PNM::_internal::RawSave( data.data(), height, width, type, max );
    }

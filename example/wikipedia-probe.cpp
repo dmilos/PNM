@@ -37,7 +37,7 @@ void print( PNM::Info const& info )
 
 void check( std::string const& filename )
  {
-  std::ifstream ifs( filename.c_str() );
+  std::ifstream ifs( filename.c_str(), std::ios_base::binary );
   PNM::Info info;
 
   ifs >> PNM::probe( info );

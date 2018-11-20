@@ -22,7 +22,7 @@
 
 ### Load image in to std::vector :
 ```c++
- std::ifstream ifs( "image.pbm" );
+ std::ifstream ifs( "image.pbm", std::ios_base::binary );
  std::vector<std::uint8_t > data;
  PNM::Info info;
 
@@ -58,7 +58,7 @@
    return (std::uint8_t *) malloc( size );
   }
 
- std::ifstream ifs( "image.pbm" );
+ std::ifstream ifs( "image.pbm", std::ios_base::binary );
  std::uint8_t *data;
  PNM::Info info;
 
@@ -77,7 +77,7 @@
 ### Load data from already alocated memory:
 ```c++
 
- std::ifstream ifs( "image.pbm" );
+ std::ifstream ifs( "image.pbm", std::ios_base::binary );
  std::uint8_t *data = malloc( 100 * 100 * 3  );
  PNM::Info info;
 
@@ -107,7 +107,7 @@
 
 ### Probe the file:
 ```c++
- std::ifstream ifs( "image.pbm" );
+ std::ifstream ifs( "image.pbm", std::ios_base::binary );
  PNM::Info info;
 
  ifs >> PNM::probe( info );

@@ -42,7 +42,7 @@ int main( int argc, char *argv[] )
   std::vector<std::uint8_t > data;
 
   {
-   std::ifstream ifs( DATA_FOLDER "/wikipedia.pbm" );
+   std::ifstream ifs( DATA_FOLDER "/wikipedia.pbm", std::ios_base::binary );
    ifs >> PNM::load( data, info );
   }
 
@@ -61,7 +61,7 @@ int main( int argc, char *argv[] )
 
     {
      // reload
-     std::ifstream ifs( filename );
+     std::ifstream ifs( filename, std::ios_base::binary );
      ifs >> PNM::load( data, info );
      print( info );
     }
@@ -76,7 +76,7 @@ int main( int argc, char *argv[] )
 
     {
      // reload
-     std::ifstream ifs( filename );
+     std::ifstream ifs( filename, std::ios_base::binary );
      ifs >> PNM::load( data, info );
      print( info );
     }
@@ -92,7 +92,7 @@ int main( int argc, char *argv[] )
 
     {
      // reload
-     std::ifstream ifs( filename );
+     std::ifstream ifs( filename, std::ios_base::binary );
      ifs >> PNM::load( data, info );
      print( info );
     }
@@ -108,7 +108,7 @@ int main( int argc, char *argv[] )
 
     {
      // reload
-     std::ifstream ifs( filename );
+     std::ifstream ifs( filename, std::ios_base::binary );
      ifs >> PNM::load( data, info );
      print( info );
     }

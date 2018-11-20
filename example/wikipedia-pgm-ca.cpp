@@ -44,7 +44,7 @@ int main( int argc, char *argv[] )
  {
   std::cout << __FILE__ << std::endl;
 
-  std::ifstream ifs( DATA_FOLDER "/wikipedia.pgm" );
+  std::ifstream ifs( DATA_FOLDER "/wikipedia.pgm", std::ios_base::binary );
   std::uint8_t *data;
   PNM::Info info;
 
