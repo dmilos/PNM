@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ./corrupt.exe
 ./readme-01.exe
 ./readme-02.exe

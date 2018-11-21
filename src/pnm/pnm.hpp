@@ -22,9 +22,20 @@ namespace PNM
       Info( std::size_t const& width, std::size_t const& height, PNM::type const& type, std::size_t const& max = 255 )
        :m_width(width)
        ,m_height(height)
-       ,m_type(type)
        ,m_max(max)
+       ,m_channel( 1 )
+       ,m_depth( 8 )
+       ,m_type(type)
        {
+        switch( m_type )
+         {
+          case(PNM::P1): m_channel = 1; m_depth = 1 ; break;
+          case(PNM::P4): m_channel = 1; m_depth = 1 ; break;
+          case(PNM::P2): m_channel = 1; m_depth = 8 ; break;
+          case(PNM::P5): m_channel = 1; m_depth = 8 ; break;
+          case(PNM::P3): m_channel = 3; m_depth = 8 ; break;
+          case(PNM::P6): m_channel = 3; m_depth = 8 ; break;
+         }
        }
 
       bool             valid()  const { return PNM::error != m_type;  }
@@ -489,11 +500,6 @@ namespace PNM
          {
          }
 
-        RawLoad & operator=( RawLoad const& that )
-         {
-          return *this;
-         }
-
        bool process( std::istream& is )
         {
          if( PNM::error == m_probe.type() ){ return false; }
@@ -550,9 +556,19 @@ namespace PNM
          : m_data( data )
          , m_width( width )
          , m_height( height )
+         , m_channel( 1 )
          , m_type( type )
          , m_max( max )
          {
+          switch( m_type )
+           {
+            case(PNM::P1): m_channel = 1; break;
+            case(PNM::P4): m_channel = 1; break;
+            case(PNM::P2): m_channel = 1; break;
+            case(PNM::P5): m_channel = 1; break;
+            case(PNM::P3): m_channel = 3; break;
+            case(PNM::P6): m_channel = 3; break;
+           }
          }
 
        bool process( std::ostream& os )

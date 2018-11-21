@@ -1,3 +1,5 @@
+#!/bin/bash
+
 g++ -fexceptions -std=c++11 -g -I../src corrupt.cpp                       -o  corrupt
 g++ -fexceptions -std=c++11 -g -I../src wikipedia-pbm-ca.cpp              -o  wikipedia-pbm-ca
 g++ -fexceptions -std=c++11 -g -I../src wikipedia-pbm-raw.cpp             -o  wikipedia-pbm-raw
