@@ -1,13 +1,13 @@
 # PNM( Portable Anymap Format ) AKA Netpbm
 
-### Status:
+### Status
   - Done and ready for use.
     - Implemented: P1, P2, P3, P4, P5, P6
 
 ### Description
  - PBM, PGM and PPM  reader and writer
 
-### Key features:
+### Key features
 - Headers only
   - One file to include
   - One file to handle
@@ -20,7 +20,7 @@
     - Number of functions :3 ( three )
     - Number of Classes/Structures: 1 ( one )
 
-### Load image in to std::vector :
+### Load image in to std::vector
 ```c++
  std::ifstream ifs( "image.pbm", std::ios_base::binary );
  std::vector<std::uint8_t > data;
@@ -38,7 +38,7 @@
   }
 ```
 
-### Save image from std::vector:
+### Save image from std::vector
 ```c++
  std::ofstream ofs("image1.pbm");
  std::vector<std::uint8_t > data;
@@ -74,7 +74,7 @@
   }
 ```
 
-### Load data from already alocated memory:
+### Load data from already alocated memory
 ```c++
 
  std::ifstream ifs( "image.pbm", std::ios_base::binary );
@@ -93,7 +93,7 @@
   }
 ```
 
-### Save data from raw memory:
+### Save data from raw memory
 ```c++
  std::ofstream ofs( "image1.pgm" );
  std::uint8_t data[ 100*100];
@@ -105,7 +105,7 @@
  { std::ofstream( "image2.pgm" )<< PNM::save( data, 100, 100, PNM::P2 ) }
 ```
 
-### Probe the file:
+### Probe the file
 ```c++
  std::ifstream ifs( "image.pbm", std::ios_base::binary );
  PNM::Info info;
@@ -121,7 +121,7 @@
   }
 ```
 
-### Install:
+### Install
 1. Clone this Repository: \
   Examples:
     - Windows : git clone https://github.com/dmilos/PNM.git c:\my-work-folder\my-git-folder\PNM
@@ -134,7 +134,7 @@
 ### Links
   - [Wiki page](https://en.wikipedia.org/wiki/Netpbm_format)
 
-### Tested against:
+### Tested against
 - gcc 6.4.0
 - MSVC 2015
 - MSVC 2017

@@ -18,7 +18,7 @@ namespace PNM
     public:
       typedef std::size_t size_type;
 
-      Info():m_type(PNM::error){ }
+      Info():Info(0,0,PNM::error,0){ }
       Info( std::size_t const& width, std::size_t const& height, PNM::type const& type, std::size_t const& max = 255 )
        :m_width(width)
        ,m_height(height)
@@ -29,6 +29,7 @@ namespace PNM
        {
         switch( m_type )
          {
+          case(PNM::error): m_channel = 1; m_depth = 1 ; break;
           case(PNM::P1): m_channel = 1; m_depth = 1 ; break;
           case(PNM::P4): m_channel = 1; m_depth = 1 ; break;
           case(PNM::P2): m_channel = 1; m_depth = 8 ; break;
@@ -329,8 +330,8 @@ namespace PNM
          ,m_channel( info.channel() )
          ,m_max( info.max() )
          {
-          this->m_width   = -1;
-          this->m_height  = -1;
+          this->m_width   = 0;
+          this->m_height  = 0;
           this->m_type    = PNM::error;
           this->m_channel = 0;
           this->m_max     = 1;
