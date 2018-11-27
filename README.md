@@ -46,7 +46,7 @@
  //< In here fill data with something >
 
  ofs << PNM::save( data, 100, 100, PNM::P1 );
- 
+
  // One-liner version
  { std::ofstream("image2.pbm") << PNM::save( data, 100, 100, PNM::P1 ); }
 ```
@@ -100,9 +100,9 @@
  //< In here fill data with something >
 
  ofs << PNM::save( data, 100, 100, PNM::P2 );
- 
+
  // One-liner version
- { std::ofstream( "image2.pgm" )<< PNM::save( data, 100, 100, PNM::P2 ) }
+ { std::ofstream( "image2.pgm" )<< PNM::save( data, 100, 100, PNM::P2 ); }
 ```
 
 ### Probe the file

@@ -22,9 +22,9 @@ namespace PNM
       Info( std::size_t const& width, std::size_t const& height, PNM::type const& type, std::size_t const& max = 255 )
        :m_width(width)
        ,m_height(height)
-       ,m_max(max)
        ,m_channel( 1 )
        ,m_depth( 8 )
+       ,m_max(max)
        ,m_type(type)
        {
         switch( m_type )
@@ -42,25 +42,25 @@ namespace PNM
       bool             valid()  const { return PNM::error != m_type;  }
       size_type const& width()  const { return m_width;  }
       size_type const& height() const { return m_height; }
-      size_type const& max()    const { return m_max;    }
       size_type const& channel()const { return m_channel;}
       size_type const& depth()  const { return m_depth;  } //!< Depth of channel in bits
+      size_type const& max()    const { return m_max;    }
       PNM::type const& type()   const { return m_type;   }
 
     public:
       size_type  & width()  { return m_width;  }
       size_type  & height() { return m_height; }
-      size_type  & max()    { return m_max;    }
       size_type  & channel(){ return m_channel;}
       size_type  & depth()  { return m_depth;  }
+      size_type  & max()    { return m_max;    }
       PNM::type  & type()   { return m_type;   }
 
     private:
       size_type   m_width;
       size_type   m_height;
-      size_type   m_max;
       size_type   m_channel;
-      size_type   m_depth;
+      size_type   m_depth;   //!< Depth of channel in bits
+      size_type   m_max;
       PNM::type   m_type;
    };
 
@@ -330,8 +330,8 @@ namespace PNM
          ,m_channel( info.channel() )
          ,m_max( info.max() )
          {
-          this->m_width   = 0;
-          this->m_height  = 0;
+          this->m_width   = -1;
+          this->m_height  = -1;
           this->m_type    = PNM::error;
           this->m_channel = 0;
           this->m_max     = 1;
@@ -347,53 +347,53 @@ namespace PNM
            is.seekg (0, std::ios_base::beg );
           }
 
-          this->m_type = PNM::_internal::load_magic( is ); if( PNM::error == this->m_type ) { is.seekg( 0, std::ios_base::beg ); return false; }
+          this->m_type = PNM::_internal::load_magic( is ); if( PNM::error == this->type() ) { is.seekg( 0, std::ios_base::beg ); return false; }
 
-          switch( this->m_type )
+          switch( this->type() )
            {
-            case( PNM::P1 ): m_channel = 1; break;
-            case( PNM::P2 ): m_channel = 1; break;
-            case( PNM::P3 ): m_channel = 3; break;
-            case( PNM::P4 ): m_channel = 1; break;
-            case( PNM::P5 ): m_channel = 1; break;
-            case( PNM::P6 ): m_channel = 3; break;
+            case( PNM::P1 ): this->m_channel = 1; break;
+            case( PNM::P2 ): this->m_channel = 1; break;
+            case( PNM::P3 ): this->m_channel = 3; break;
+            case( PNM::P4 ): this->m_channel = 1; break;
+            case( PNM::P5 ): this->m_channel = 1; break;
+            case( PNM::P6 ): this->m_channel = 3; break;
             default: return false;
            }
 
-          if( false == PNM::_internal::load_junk(   is )           ){ is.seekg( 0, std::ios_base::beg ); return false; }
-          if( false == PNM::_internal::load_number( is, m_width  ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
-          if( false == PNM::_internal::load_junk(   is )           ){ is.seekg( 0, std::ios_base::beg ); return false; }
-          if( false == PNM::_internal::load_number( is, m_height ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_junk(   is )                 ){ is.seekg( 0, std::ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_number( is, this->m_width  ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_junk(   is )                 ){ is.seekg( 0, std::ios_base::beg ); return false; }
+          if( false == PNM::_internal::load_number( is, this->m_height ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
 
           std::size_t size = -1;
-          switch( this->m_type )
+          switch( this->type() )
            {
             case( PNM::P4 ):
              {
-              size = ( m_width / 8 + ( ( m_width  % 8 ) ? 1:0 ) ) * m_height;
+              size = ( this->width() / 8 + ( ( this->width()  % 8 ) ? 1:0 ) ) * this->height();
              }break;
             case( PNM::P5 ):
             case( PNM::P6 ):
              {
-              size = m_width * m_height * m_channel;
+              size = this->width() * this->height() * this->channel();
              }break;
             default: break;
            }
 
-          switch( this->m_type )
+          switch( this->type() )
            {
             case( PNM::P2 ):
             case( PNM::P3 ):
             case( PNM::P5 ):
             case( PNM::P6 ):
              {
-              if( false == PNM::_internal::load_junk(   is )        ){ is.seekg( 0, std::ios_base::beg ); return false; }
-              if( false == PNM::_internal::load_number( is, m_max ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
+              if( false == PNM::_internal::load_junk(   is )              ){ is.seekg( 0, std::ios_base::beg ); return false; }
+              if( false == PNM::_internal::load_number( is, this->m_max ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
              }
             default: break;
            }
 
-          switch( this->m_type )
+          switch( this->type() )
            {
             case( PNM::P1 ): case( PNM::P2 ): case( PNM::P3 ):
              {
@@ -402,7 +402,7 @@ namespace PNM
             default: break;
            }
 
-          switch( this->m_type )
+          switch( this->type() )
            {
             case( PNM::P4 ): case( PNM::P5 ): case( PNM::P6 ):
              {
