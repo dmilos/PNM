@@ -41,20 +41,20 @@ int main( int argc, char *argv[] )
    PNM::Info info;
 
    {
-    std::ifstream ifs( DATA_FOLDER "/example01.ppm", ios::binary );
+    std::ifstream ifs( DATA_FOLDER "/example01.ppm", std::ios::binary );
     ifs >> PNM::load( data, info );
     print( info );
    }
 
    {
     info.type() = PNM::P3;
-    std::ofstream ofs( OUT_FOLDER "/P3-reload" "-txt.ppm", ios::binary);
+    std::ofstream ofs( OUT_FOLDER "/P3-reload" "-txt.ppm", std::ios::binary);
     ofs << PNM::save( data, info );
    }
 
    {
     info.type() = PNM::P6;
-    std::ofstream ofs( OUT_FOLDER "/P3-reload" "-bin.ppm", ios::binary );
+    std::ofstream ofs( OUT_FOLDER "/P3-reload" "-bin.ppm", std::ios::binary );
     ofs << PNM::save( data, info );
    }
 

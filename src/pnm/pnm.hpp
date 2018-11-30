@@ -1,3 +1,24 @@
+/*
+   Copyright 2016 Dejan D. M. Milosavljevic
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+/*
+ Project Name: PNM
+ Description: PNM( Portable Anymap Format ) AKA Netpbm reader/decoder and writer/encoder
+ Source: http://github.com/dmilos/PNM
+*/
+
 #ifndef Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13
 #define Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13
 
@@ -574,8 +595,8 @@ namespace PNM
 
        bool process( std::ostream& os )
         {
-         static std::uint8_t separator = ' '; /*os.widen('\n')*/
-         static std::uint8_t terminator = '\x0A'; /*os.widen('\n')*/
+         static const std::uint8_t separator  = ' ';    /*os.widen('  ')*/
+         static const std::uint8_t terminator = '\x0A'; /*os.widen('\n')*/
 
          os << "P" << char( int(m_type) + '0' ) << separator;
          os << m_width  << separator;

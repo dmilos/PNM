@@ -17,8 +17,9 @@
   - No need to recompile or start some install process.
   - API Statistics.
     - Number of namespaces: 1( one )
-    - Number of functions :3 ( three )
+    - Number of functions: 3 ( three )
     - Number of Classes/Structures: 1 ( one )
+    - Number of operators: 2 ( two )
 
 ### Load image in to std::vector
 ```c++
@@ -36,6 +37,8 @@
     std::cout << "type    = "  << (int)info.type() << std::endl;
    // data contain valid information
   }
+  // One-liner version. 
+  { std::ifstream( "image.pbm", std::ios_base::binary ) >> PNM::load( data, info ); }
 ```
 
 ### Save image from std::vector
@@ -72,6 +75,9 @@
    std::cout << "type    = "  << (int)info.type() << std::endl;
    // data contain valid information allocated by my_allocator
   }
+
+  // One-liner version. 
+  { std::ifstream( "image.pbm", std::ios_base::binary ) >> PNM::load( &data, my_allocator, info ); }
 ```
 
 ### Load data from already alocated memory
@@ -91,6 +97,9 @@
    std::cout << "type    = "  << (int)info.type() << std::endl;
    // data contain valid information allocated by my_allocator
   }
+
+  // One-liner version. 
+  { std::ifstream( "image.pbm", std::ios_base::binary ) >> PNM::load( data, info ); }
 ```
 
 ### Save data from raw memory
@@ -119,6 +128,9 @@
    std::cout << "channel = "  << info.channel()   << std::endl;
    std::cout << "type    = "  << (int)info.type() << std::endl;
   }
+
+ // One-liner version
+ { std::ifstream( "image.pbm" )>> PNM::save( info ); }
 ```
 
 ### Install
