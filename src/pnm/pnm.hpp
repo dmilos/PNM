@@ -653,7 +653,7 @@ namespace PNM
 
   inline PNM::_internal::RawSave save( std::uint8_t const* data, PNM::Info const& info )
    {
-    return PNM::_internal::RawSave( data, info.height(), info.width(), info.type(), info.max() );
+    return PNM::_internal::RawSave( data, info.width(), info.height(), info.type(), info.max() );
    }
 
   inline PNM::_internal::RawSave save(  std::vector<std::uint8_t> const& data, PNM::Info const& info )
@@ -666,9 +666,9 @@ namespace PNM
     return PNM::_internal::RawSave( data, width, height, type, max );
    }
 
-  inline PNM::_internal::RawSave save( std::vector<std::uint8_t> const& data, std::size_t const& height, std::size_t const& width, PNM::type const&type, std::size_t const&max = 255 )
+  inline PNM::_internal::RawSave save( std::vector<std::uint8_t> const& data, std::size_t const& width, std::size_t const& height, PNM::type const&type, std::size_t const&max = 255 )
    {
-    return PNM::_internal::RawSave( data.data(), height, width, type, max );
+    return PNM::_internal::RawSave( data.data(), width, height, type, max );
    }
 
   inline  PNM::_internal::Probe probe( PNM::Info &info )

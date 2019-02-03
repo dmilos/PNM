@@ -80,11 +80,11 @@
   { std::ifstream( "image.pbm", std::ios_base::binary ) >> PNM::load( &data, my_allocator, info ); }
 ```
 
-### Load data from already alocated memory
+### Load data from already allocated memory
 ```c++
 
  std::ifstream ifs( "image.pbm", std::ios_base::binary );
- std::uint8_t *data = malloc( 100 * 100 * 3  );
+ std::uint8_t *data = malloc( 100 * 100 * 3 );
  PNM::Info info;
 
  ifs >> PNM::load( data, info );
@@ -105,13 +105,13 @@
 ### Save data from raw memory
 ```c++
  std::ofstream ofs( "image1.pgm" );
- std::uint8_t data[ 100*100];
+ std::uint8_t data[ 100 * 100 ];
  //< In here fill data with something >
 
  ofs << PNM::save( data, 100, 100, PNM::P2 );
 
  // One-liner version
- { std::ofstream( "image2.pgm" )<< PNM::save( data, 100, 100, PNM::P2 ); }
+ { std::ofstream( "image2.pgm" ) << PNM::save( data, 100, 100, PNM::P2 ); }
 ```
 
 ### Probe the file
@@ -130,7 +130,7 @@
   }
 
  // One-liner version
- { std::ifstream( "image.pbm" )>> PNM::save( info ); }
+ { std::ifstream( "image.pbm" )>> PNM::probe( info ); }
 ```
 
 ### Install
