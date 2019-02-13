@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="author" content="Dejan D. M. Milosavljevic">
+		<link rel="icon" href="../favicon.ico" type="image/ico">
+		<title>Macro replacement</title>
+	</head>
+	<body>
+		<h1 align="center">Macros</h1>
+		<dl>
+			<dt><h3>TOC</h3></dt>
+			<dd>
+				<ul>
+					<li><a href="#Description">Description</a></li>
+					<li><a href="#List">List</a>
+						<ul>
+							<li><a href="#UUID">Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13</a></li>
+						</ul>
+					</li>
+				</ul>
+			</dd>
+			<dt><a name="Description" /><h3>Description</h3></dt>
+			<dd>Macros for various use.</dd>
+			<dt><a name="List" /><h3>List</h3></dt>
+			<dd>
+				<dl>
+					<dt><code>Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13</code></dt>
+					<dd>
+						<dl>
+							<dt><a name="UUID" />Name</dt>
+							<dd><code>Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13</code></dd>
+							<dt>Description</dt><dd>Header of PNM library is included and ready for use. </dd>
+							<dt>Example</dt>
+							<dd>
+								<code>
+									#ifdef Portable_Anymap_Format_E84FDB3F_0BF3_447F_821D_B9480766CC13<br>
+									{ std::ofstream("image2.pbm") &gt;&gt; PNM::save( data, 100, 100, PNM::P1 ); } <br>
+									#else<br>
+									#error "Missing PNM library"<br>
+									#endif<br>
+								</code>
+							</dd>
+						</dl>
+					</dd>
+				</dl>
+			</dd>
+		</dl>
+		<hr />
+	</body>
+</html>
