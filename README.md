@@ -8,7 +8,7 @@
  - PBM, PGM and PPM  reader and writer
 
 ### Key features
-  - Header ~~s~~ only
+  - Header~~s~~ only
   - One file to include
   - One file to handle
   - No third parties
