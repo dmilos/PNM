@@ -90,7 +90,7 @@ namespace PNM
 
     inline bool load_NL( std::istream& is ) // Parse new line.
      {
-      auto begin = is.tellg();
+      //auto begin = is.tellg();
       auto ch = is.get();
       if( ( ch != 0x0d ) && ( ch != 0x0a ) )
        {
@@ -287,7 +287,7 @@ namespace PNM
       {
        is.read( (char*)data, width * height * channel );
        auto gc = is.gcount();
-       if( (width * height * channel) != gc )
+       if( (width * height * channel) != std::size_t( gc ) )
         {
          return false;
         }
@@ -345,9 +345,9 @@ namespace PNM
       public:
 
         explicit Probe( PNM::Info &info )
-         :m_width( info.width() )
+         :m_type( info.type() )
+         ,m_width( info.width() )
          ,m_height( info.height() )
-         ,m_type( info.type() )
          ,m_channel( info.channel() )
          ,m_max( info.max() )
          {
@@ -441,11 +441,11 @@ namespace PNM
         std::size_t const& channel()const{ return m_channel;}
         PNM::type   const& type()  const { return m_type;   }
 
+        PNM::type   & m_type;
         std::size_t & m_width;
         std::size_t & m_height;
-        std::size_t & m_max;
         std::size_t & m_channel;
-        PNM::type   & m_type;
+        std::size_t & m_max;
      };
 
     class VectorLoad
@@ -472,6 +472,7 @@ namespace PNM
 
          switch( m_probe.type() )
           {
+           default: return false;
            case( PNM::P1 ): return PNM::_internal::load_ascii_P1(   is, m_data.data(), m_probe.width(), m_probe.height() );
            case( PNM::P2 ): return PNM::_internal::load_ascii_P2P3( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
            case( PNM::P3 ): return PNM::_internal::load_ascii_P2P3( is, m_data.data(), m_probe.width(), m_probe.height(), m_probe.channel() );
@@ -575,15 +576,16 @@ namespace PNM
      {
       public:
         RawSave( std::uint8_t const * data, std::size_t const& width, std::size_t const&  height, PNM::type const&type, std::size_t const&  max = 255 )
-         : m_data( data )
+         : m_type( type )
          , m_width( width )
          , m_height( height )
          , m_channel( 1 )
-         , m_type( type )
          , m_max( max )
+         , m_data( data )
          {
           switch( m_type )
            {
+            default: m_channel =0;
             case(PNM::P1): m_channel = 1; break;
             case(PNM::P4): m_channel = 1; break;
             case(PNM::P2): m_channel = 1; break;
@@ -625,12 +627,12 @@ namespace PNM
         }
 
        private:
-         std::uint8_t const* m_data;
+         PNM::type   m_type;
          std::size_t m_width;
          std::size_t m_height;
          std::size_t m_channel;
-         PNM::type  m_type;
          std::size_t m_max;
+         std::uint8_t const* m_data;
      };
 
    }
