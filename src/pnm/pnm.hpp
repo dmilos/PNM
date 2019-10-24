@@ -32,7 +32,17 @@
 
 namespace PNM
  {
-  enum type{ error, P1=1, P2=2, P3=3, P4=4, P5=5, P6=6/*, P7=7*/ };
+  enum type
+   {
+    error,
+    P1=1, //!< bitmap, ASCII
+    P2=2, //!< gray,   ASCII
+    P3=3, //!< RGB,    ASCI
+    P4=4, //!< bitmap, Binary
+    P5=5, //!< gray,   Binary
+    P6=6  //!< RGB,    Binary
+    /*, P7=7*/
+   };
 
   class Info
    {
