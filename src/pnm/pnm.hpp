@@ -35,12 +35,12 @@ namespace PNM
   enum type
    {
     error,
-    P1=1, //!< bitmap, ASCII
-    P2=2, //!< gray,   ASCII
-    P3=3, //!< RGB,    ASCI
-    P4=4, //!< bitmap, Binary
-    P5=5, //!< gray,   Binary
-    P6=6  //!< RGB,    Binary
+    P1=1, //!< bitmap, ASCII  , *.pbm
+    P2=2, //!< gray,   ASCII  . *.pgm
+    P3=3, //!< RGB,    ASCI   , *.ppm
+    P4=4, //!< bitmap, Binary , *.pbm
+    P5=5, //!< gray,   Binary , *.pgm
+    P6=6  //!< RGB,    Binary , *.ppm
     /*, P7=7*/
    };
 
