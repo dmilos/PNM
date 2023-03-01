@@ -30,7 +30,7 @@ int main( int argc, char *argv[] )
   {
     std::cout << "width   = "  << info.width ()    << std::endl;
     std::cout << "height  = "  << info.height()    << std::endl;
-    std::cout << "max     = "  << info.max()       << std::endl;
+    std::cout << "maximum = "  << info.maximum()   << std::endl;
     std::cout << "channel = "  << info.channel()   << std::endl;
     std::cout << "type    = "  << (int)info.type() << std::endl;
   }

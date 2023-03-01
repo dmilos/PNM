@@ -50,12 +50,12 @@ namespace PNM
       typedef std::size_t size_type;
 
       Info():Info(0,0,PNM::error,0){ }
-      Info( std::size_t const& width, std::size_t const& height, PNM::type const& type, std::size_t const& max = 255 )
+      Info( std::size_t const& width, std::size_t const& height, PNM::type const& type, std::size_t const& maximum = 255 )
        :m_width(width)
        ,m_height(height)
        ,m_channel( 1 )
        ,m_depth( 8 )
-       ,m_max(max)
+       ,m_maximum(maximum)
        ,m_type(type)
        {
         switch( m_type )
@@ -75,7 +75,7 @@ namespace PNM
       size_type const& height() const { return m_height; }
       size_type const& channel()const { return m_channel;}
       size_type const& depth()  const { return m_depth;  } //!< Depth of channel in bits
-      size_type const& max()    const { return m_max;    }
+      size_type const& maximum()const { return m_maximum;}
       PNM::type const& type()   const { return m_type;   }
 
     public:
@@ -83,7 +83,7 @@ namespace PNM
       size_type  & height() { return m_height; }
       size_type  & channel(){ return m_channel;}
       size_type  & depth()  { return m_depth;  }
-      size_type  & max()    { return m_max;    }
+      size_type  & maximum(){ return m_maximum;}
       PNM::type  & type()   { return m_type;   }
 
     private:
@@ -91,7 +91,7 @@ namespace PNM
       size_type   m_height;
       size_type   m_channel;
       size_type   m_depth;   //!< Depth of channel in bits
-      size_type   m_max;
+      size_type   m_maximum;
       PNM::type   m_type;
    };
 
@@ -359,13 +359,13 @@ namespace PNM
          ,m_width( info.width() )
          ,m_height( info.height() )
          ,m_channel( info.channel() )
-         ,m_max( info.max() )
+         ,m_maximum( info.maximum() )
          {
           this->m_width   = -1;
           this->m_height  = -1;
           this->m_type    = PNM::error;
           this->m_channel = 0;
-          this->m_max     = 1;
+          this->m_maximum = 1;
          }
 
         bool process( std::istream& is )
@@ -418,8 +418,8 @@ namespace PNM
             case( PNM::P5 ):
             case( PNM::P6 ):
              {
-              if( false == PNM::_internal::load_junk(   is )              ){ is.seekg( 0, std::ios_base::beg ); return false; }
-              if( false == PNM::_internal::load_number( is, this->m_max ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
+              if( false == PNM::_internal::load_junk(   is )                  ){ is.seekg( 0, std::ios_base::beg ); return false; }
+              if( false == PNM::_internal::load_number( is, this->m_maximum ) ){ is.seekg( 0, std::ios_base::beg ); return false; }
              }
             default: break;
            }
@@ -447,7 +447,7 @@ namespace PNM
 
         std::size_t const& width() const { return m_width;  }
         std::size_t const& height()const { return m_height; }
-        std::size_t const& max()const    { return m_max;    }
+        std::size_t const& maximum()const{ return m_maximum;}
         std::size_t const& channel()const{ return m_channel;}
         PNM::type   const& type()  const { return m_type;   }
 
@@ -455,7 +455,7 @@ namespace PNM
         std::size_t & m_width;
         std::size_t & m_height;
         std::size_t & m_channel;
-        std::size_t & m_max;
+        std::size_t & m_maximum;
      };
 
     class VectorLoad
@@ -585,12 +585,12 @@ namespace PNM
     class RawSave
      {
       public:
-        RawSave( std::uint8_t const * data, std::size_t const& width, std::size_t const&  height, PNM::type const&type, std::size_t const&  max = 255 )
+        RawSave( std::uint8_t const * data, std::size_t const& width, std::size_t const&  height, PNM::type const&type, std::size_t const&  maximum = 255 )
          : m_type( type )
          , m_width( width )
          , m_height( height )
          , m_channel( 1 )
-         , m_max( max )
+         , m_maximum( maximum )
          , m_data( data )
          {
           switch( m_type )
@@ -617,7 +617,7 @@ namespace PNM
          if( ( PNM::P2 == m_type ) || ( PNM::P3 == m_type ) || ( PNM::P5 == m_type ) || ( PNM::P6 == m_type ) )
           {
            os << separator;
-           os << m_max;
+           os << m_maximum;
           }
 
          os << terminator;
@@ -641,7 +641,7 @@ namespace PNM
          std::size_t m_width;
          std::size_t m_height;
          std::size_t m_channel;
-         std::size_t m_max;
+         std::size_t m_maximum;
          std::uint8_t const* m_data;
      };
 
@@ -665,22 +665,22 @@ namespace PNM
 
   inline PNM::_internal::RawSave save( std::uint8_t const* data, PNM::Info const& info )
    {
-    return PNM::_internal::RawSave( data, info.width(), info.height(), info.type(), info.max() );
+    return PNM::_internal::RawSave( data, info.width(), info.height(), info.type(), info.maximum() );
    }
 
   inline PNM::_internal::RawSave save(  std::vector<std::uint8_t> const& data, PNM::Info const& info )
    {
-    return PNM::_internal::RawSave( data.data(), info.width(), info.height(), info.type(), info.max() );
+    return PNM::_internal::RawSave( data.data(), info.width(), info.height(), info.type(), info.maximum() );
    }
 
-  inline PNM::_internal::RawSave save( std::uint8_t const* data, std::size_t const& width, std::size_t const& height, PNM::type const&type, std::size_t const&max = 255 )
+  inline PNM::_internal::RawSave save( std::uint8_t const* data, std::size_t const& width, std::size_t const& height, PNM::type const&type, std::size_t const &maximum = 255 )
    {
-    return PNM::_internal::RawSave( data, width, height, type, max );
+    return PNM::_internal::RawSave( data, width, height, type, maximum );
    }
 
-  inline PNM::_internal::RawSave save( std::vector<std::uint8_t> const& data, std::size_t const& width, std::size_t const& height, PNM::type const&type, std::size_t const&max = 255 )
+  inline PNM::_internal::RawSave save( std::vector<std::uint8_t> const& data, std::size_t const& width, std::size_t const& height, PNM::type const&type, std::size_t const&maximum = 255 )
    {
-    return PNM::_internal::RawSave( data.data(), width, height, type, max );
+    return PNM::_internal::RawSave( data.data(), width, height, type, maximum );
    }
 
   inline  PNM::_internal::Probe probe( PNM::Info &info )
