@@ -32,7 +32,7 @@
   {
     std::cout << "width   = "  << info.width ()    << std::endl;
     std::cout << "height  = "  << info.height()    << std::endl;
-    std::cout << "max     = "  << info.max()       << std::endl;
+    std::cout << "max     = "  << info.maximum()   << std::endl;
     std::cout << "channel = "  << info.channel()   << std::endl;
     std::cout << "type    = "  << (int)info.type() << std::endl;
    // data contain valid information
@@ -70,7 +70,7 @@
   {
    std::cout << "width   = "  << info.width ()    << std::endl;
    std::cout << "height  = "  << info.height()    << std::endl;
-   std::cout << "max     = "  << info.max()       << std::endl;
+   std::cout << "max     = "  << info.maximum()   << std::endl;
    std::cout << "channel = "  << info.channel()   << std::endl;
    std::cout << "type    = "  << (int)info.type() << std::endl;
    // data contain valid information allocated by my_allocator
@@ -92,7 +92,7 @@
   {
    std::cout << "width   = "  << info.width ()    << std::endl;
    std::cout << "height  = "  << info.height()    << std::endl;
-   std::cout << "max     = "  << info.max()       << std::endl;
+   std::cout << "max     = "  << info.maximum()   << std::endl;
    std::cout << "channel = "  << info.channel()   << std::endl;
    std::cout << "type    = "  << (int)info.type() << std::endl;
    // data contain valid information allocated by my_allocator
@@ -124,7 +124,7 @@
   {
    std::cout << "width   = "  << info.width ()    << std::endl;
    std::cout << "height  = "  << info.height()    << std::endl;
-   std::cout << "max     = "  << info.max()       << std::endl;
+   std::cout << "max     = "  << info.maximum()   << std::endl;
    std::cout << "channel = "  << info.channel()   << std::endl;
    std::cout << "type    = "  << (int)info.type() << std::endl;
   }
